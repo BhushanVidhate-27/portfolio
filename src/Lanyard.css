@@ -1,0 +1,40 @@
+.lanyard-fixed-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 420px;
+  height: 100vh;
+  z-index: 999;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-40px) scale(0.9);
+  transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.lanyard-fixed-container.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.lanyard-wrapper {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.lanyard-wrapper canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Adjust layout on mobile devices */
+@media screen and (max-width: 767px) {
+  .lanyard-fixed-container {
+    width: 260px;
+    height: 100vh;
+    top: 0;
+    left: 0;
+  }
+}

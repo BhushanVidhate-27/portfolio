@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bhushan | Portfolio</title>
+
+  <!-- SEO & Social Meta -->
+  <meta name="description" content="Bhushan - A creative portfolio with advanced WebGL fluid simulation.">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Outfit:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="/style.css">
+  <link rel="preload" as="image" href="/layer_2.webp" type="image/webp">
+  <link rel="preload" as="image" href="/layer_1.webp" type="image/webp">
+</head>
+
+<body>
+
+  <!-- Startup Loader Screen -->
+  <div class="loader" id="loader">
+    <div class="loader-c">
+      <div class="loader-anim">
+        <!-- B Load SVG -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 291" class="b-load">
+          <path class="loader-path"
+            d="M 0,7.4 H 150 C 200,7.4 230,35 230,75 C 230,110 205,135 170,143 C 210,150 240,175 240,215 C 240,255 210,286.2 150,286.2 H 0 Z M 70,70 H 140 C 160,70 170,80 170,95 C 170,110 160,120 140,120 H 70 Z M 70,170 H 145 C 165,170 175,180 175,195 C 175,210 165,220 145,220 H 70 Z"
+            fill="none" stroke="currentColor" stroke-width="3" />
+        </svg>
+        <div class="loader-img-w">
+          <img src="/6a101bf4026551468ed05521_coeur-bulle-nb.webp" class="loader-img" alt="object" />
+          <img src="/6a101bf3288a762026817436_papier-froisse.webp" class="loader-img" alt="object" />
+          <img src="/6a101bf33377567d8f2bd507_asterix.webp" class="loader-img" alt="object" />
+          <img src="/6a3a7084cbb4dfa4268c289f_smiley.webp" class="loader-img" alt="object" />
+          <img src="/6a101bf4d60716b3d6959657_bonbon.webp" class="loader-img" alt="object" />
+          <img src="/6a101c34913dd6111b16324e_chwing.webp" class="loader-img" alt="object" />
+        </div>
+        <!-- Apostrophe Load SVG -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 41 50" class="apos-load">
+          <path class="apos-path"
+            d="M39.5359 0C39.9821 0 40.3447 0.195095 40.6235 0.585285C40.9582 0.975474 41.0697 1.39353 40.9582 1.83947L20.9631 48.9967C20.7958 49.6656 20.3217 50 19.5409 50H1.47004C1.02385 50 0.633448 49.8328 0.298802 49.4983C0.0199315 49.1081 -0.0637449 48.6901 0.0478035 48.2441L11.3421 1.17057C11.5652 0.39019 12.0393 0 12.7643 0H39.5359Z"
+            fill="currentColor" />
+        </svg>
+      </div>
+      <div class="loader-nbr-w">
+        <span id="loaderPercent">000</span>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- Navigation Bar -->
+  <header class="nav-header">
+    <!-- SVG Gooey Filter -->
+    <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+      style="position: absolute; width: 0; height: 0; pointer-events: none;">
+      <defs>
+        <filter id="goo">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur" />
+          <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -8" result="goo" />
+        </filter>
+      </defs>
+    </svg>
+
+    <div class="nav-container">
+
+      <!-- Expandable Bhushan' Logo -->
+      <a href="#" class="nav-logo-wrap" id="navLogoWrap">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 80" class="nav-logo" id="navLogo" fill="none"
+          style="overflow: visible;">
+          <defs>
+            <clipPath id="clip-nav-h">
+              <rect x="52" y="0" width="48" height="80" />
+            </clipPath>
+            <clipPath id="clip-nav-u">
+              <rect x="104" y="0" width="48" height="80" />
+            </clipPath>
+            <clipPath id="clip-nav-s">
+              <rect x="152" y="0" width="48" height="80" />
+            </clipPath>
+            <clipPath id="clip-nav-h2">
+              <rect x="204" y="0" width="48" height="80" />
+            </clipPath>
+            <clipPath id="clip-nav-a">
+              <rect x="256" y="0" width="48" height="80" />
+            </clipPath>
+            <clipPath id="clip-nav-n">
+              <rect x="308" y="0" width="48" height="80" />
+            </clipPath>
+          </defs>
+
+          <!-- B: Always visible -->
+          <text x="0" y="64" font-family="'Outfit', sans-serif" font-weight="700" font-size="72"
+            fill="currentColor">B</text>
+
+          <!-- Sliding Letters -->
+          <g clip-path="url(#clip-nav-h)" class="nav-letter-g">
+            <text x="52" y="64" font-family="'Outfit', sans-serif" font-weight="700" font-size="72"
+              fill="currentColor">H</text>
+          </g>
+          <g clip-path="url(#clip-nav-u)" class="nav-letter-g">
+            <text x="104" y="64" font-family="'Outfit', sans-serif" font-weight="700" font-size="72"
+              fill="currentColor">U</text>
+          </g>
+          <g clip-path="url(#clip-nav-s)" class="nav-letter-g">
+            <text x="152" y="64" font-family="'Outfit', sans-serif" font-weight="700" font-size="72"
+              fill="currentColor">S</text>
+          </g>
+          <g clip-path="url(#clip-nav-h2)" class="nav-letter-g">
+            <text x="204" y="64" font-family="'Outfit', sans-serif" font-weight="700" font-size="72"
+              fill="currentColor">H</text>
+          </g>
+          <g clip-path="url(#clip-nav-a)" class="nav-letter-g">
+            <text x="256" y="64" font-family="'Outfit', sans-serif" font-weight="700" font-size="72"
+              fill="currentColor">A</text>
+          </g>
+          <g clip-path="url(#clip-nav-n)" class="nav-letter-g">
+            <text x="308" y="64" font-family="'Outfit', sans-serif" font-weight="700" font-size="72"
+              fill="currentColor">N</text>
+          </g>
+
+          <!-- Apostrophe ' -->
+          <text class="nav-apos" x="0" y="64" font-family="'Outfit', sans-serif" font-weight="700" font-size="72"
+            fill="currentColor">'</text>
+        </svg>
+      </a>
+
+      <!-- Right Side Links with Gooey Effect -->
+      <div class="gooey-nav-container" id="gooeyNavContainer">
+        <nav class="nav-links-wrapper">
+          <ul class="nav-list" id="navList">
+            <li class="nav-item"><a href="#studio" class="nav-link-item">Profile</a></li>
+            <li class="nav-item"><a href="#services" class="nav-link-item">Expertise</a></li>
+            <li class="nav-item"><a href="#works" class="nav-link-item">Works</a></li>
+            <li class="nav-item"><a href="#footer" class="nav-link-item">Contact</a></li>
+          </ul>
+        </nav>
+        <span class="effect filter" id="gooeyFilter"></span>
+        <span class="effect text" id="gooeyText"></span>
+        <span class="nav-lang">EN</span>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Hero Section with Canvas Reveal -->
+  <main class="hero-section" id="hero">
+    <div class="hero-content">
+      <div class="fluid-canvas-container" id="canvasContainer">
+        <!-- Canvas will be dynamically injected here -->
+      </div>
+      <div class="hero-overlay-text">
+        <div class="tagline-top">( Hover To Reveal )</div>
+      </div>
+      <!-- Hero Scroll Down Indicator -->
+      <div class="hero-scroll-indicator" id="heroScrollIndicator">
+        <span class="scroll-text">Scroll Down</span>
+        <div class="scroll-icon-wrap">
+          <span class="scroll-icon-line"></span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Freelancer Profile Section -->
+  <section class="info-section" id="studio">
+    <div class="profile-container">
+      <div class="profile-split">
+
+        <!-- Left Column: Text Content -->
+        <div class="profile-left">
+          <div class="profile-label">( 01 / PROFILE )</div>
+          <h2 class="profile-headline">
+            Crafting high-end visual experiences for the digital age.
+          </h2>
+          <p class="profile-description">
+            I am Bhushan, a freelance creative developer blending clean frontend engineering with immersive WebGL
+            graphics. I bridge the gap between complex visual designs and flawless production-ready code.
+          </p>
+          <div class="profile-details-grid">
+            <div class="detail-cell">
+              <span class="detail-title">role</span>
+              <span class="detail-value">Creative Developer</span>
+            </div>
+            <div class="detail-cell">
+              <span class="detail-title">location</span>
+              <span class="detail-value">India / Remote</span>
+            </div>
+            <div class="detail-cell">
+              <span class="detail-title">availability</span>
+              <span class="detail-value">Q3 2026</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Floating Interactive Card & Circular Gallery -->
+        <div class="profile-right">
+          <!-- Profile Section Scroll Down Mouse Indicator (fades out on scroll) -->
+          <div class="profile-graphic-wrap" id="profileGraphicWrap">
+            <div id="profileGraphicCard"
+              style="display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; gap: 16px;">
+              <div class="studio-scroll-indicator">
+                <div class="mouse-scroll-icon">
+                  <span class="mouse-scroll-wheel"></span>
+                </div>
+                <span class="studio-scroll-text">Scroll Down to Explore Works</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Circular WebGL Gallery container (slides up from bottom) -->
+          <div class="circular-gallery-container" id="circularGalleryContainer">
+            <div class="circular-gallery-wrap" id="circularGalleryWrap"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Services Section -->
+  <section class="services-section" id="services">
+    <div class="container services-container" style="position: relative;">
+      <div class="services-grid-wrapper">
+        
+        <!-- Left Column: Section Title & Scroll Down Guide -->
+        <div class="services-left">
+          <div>
+            <div class="grid-label">( Expertise )</div>
+            <h2 class="services-headline">
+              Bridging design and technology.
+            </h2>
+          </div>
+          
+          <!-- Guide to scroll down inside the pinned section -->
+          <div class="services-pin-guide">
+            <div class="mouse-scroll-icon">
+              <span class="mouse-scroll-wheel"></span>
+            </div>
+            <span class="studio-scroll-text">Scroll down to reveal services</span>
+          </div>
+        </div>
+
+        <!-- Right Column: Interactive Focus List -->
+        <div class="services-right">
+          <ul class="services-focus-list">
+            <li class="service-focus-item active" data-index="0">Creative Web Development</li>
+            <li class="service-focus-item" data-index="1">Interactive 3D Websites</li>
+            <li class="service-focus-item" data-index="2">Custom Portfolio Design</li>
+            <li class="service-focus-item" data-index="3">Business & Startup Websites</li>
+            <li class="service-focus-item" data-index="4">Full stack Web Applications</li>
+            <li class="service-focus-item" data-index="5">Performance & SEO</li>
+            <li class="service-focus-item" data-index="6">Freelance Collaboration</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Selected Works Section -->
+  <section class="works-section" id="works">
+    <div class="works-container">
+      <div class="works-left">
+        <span class="grid-label">( Selected Works )</span>
+        <h2 class="works-title">Featured<br/>Projects</h2>
+        <p class="works-subtitle">Scroll to explore our selected case studies.</p>
+
+        <!-- Dynamic info — updated by React/GSAP per active card -->
+        <div id="worksActiveInfo" class="works-active-info">
+          <div class="works-active-inner">
+            <span class="works-active-tag" id="worksActiveTag"></span>
+            <h3 class="works-active-title" id="worksActiveTitle"></h3>
+            <p class="works-active-desc" id="worksActiveDesc"></p>
+            <div class="works-active-tech" id="worksActiveTech"></div>
+          </div>
+        </div>
+
+        <!-- Progress counter -->
+        <div class="works-counter" id="worksCounter">
+          <span id="worksCounterCurrent">00</span>
+          <span class="works-counter-sep">/</span>
+          <span id="worksCounterTotal">06</span>
+        </div>
+      </div>
+      <div class="works-right" id="worksStackContainer">
+        <!-- React component renders GSAP cards here -->
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Skills & Promise Section -->
+  <section class="team-section" id="assurance" style="position: relative;">
+    <!-- Hyperspeed Background Container -->
+    <div id="assuranceBgContainer"></div>
+    
+    <div class="container" style="position: relative; z-index: 1;">
+      <div class="grid">
+        <div class="grid-label">( Assurance )</div>
+        <div class="grid-content team-grid">
+          <div class="team-group">
+            <h3>technologies</h3>
+            <p>Next.js</p>
+            <p>Three.js / GLSL</p>
+            <p>GSAP / Lenis</p>
+            <p>Tailwind CSS / TypeScript</p>
+          </div>
+          <div class="team-group">
+            <h3>my promise</h3>
+            <p>
+              <span class="assurance-title">Tailored to Your Business</span>
+              <span class="assurance-desc">Every project is designed to reflect your brand, goals, and audience.</span>
+            </p>
+            <p>
+              <span class="assurance-title">Works on Every Device</span>
+              <span class="assurance-desc">A seamless experience across desktops, tablets, and mobile devices.</span>
+            </p>
+            <p>
+              <span class="assurance-title">Fast & Smooth Performance</span>
+              <span class="assurance-desc">Optimized for quick loading, fluid interactions, and better engagement.</span>
+            </p>
+            <p>
+              <span class="assurance-title">Built for Future Growth</span>
+              <span class="assurance-desc">Flexible, maintainable solutions that can evolve with your business.</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer Section -->
+  <footer class="footer-section" id="footer">
+    <div class="footer-container">
+      <div class="footer-left">
+        <h2 class="footer-huge-logo">BHUSHAN.</h2>
+      </div>
+      <div class="footer-right">
+        <div class="footer-column">
+          <a href="https://www.instagram.com/_bhushan_vidhate_002_/" target="_blank" rel="noopener noreferrer" class="footer-link">Instagram</a>
+          <a href="tel:+917498225053" class="footer-link">Make a Call</a>
+          <a href="https://www.linkedin.com/in/bhushan-vidhate-076950392/" target="_blank" rel="noopener noreferrer" class="footer-link">LinkedIn</a>
+          <div class="footer-copyright-info">
+            <span>© 2026</span>
+            <span>Bhushan.</span>
+            <span>All rights reserved.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Fixed Lanyard 3D Badge -->
+  <div class="lanyard-fixed-container" id="lanyardContainer"></div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>
