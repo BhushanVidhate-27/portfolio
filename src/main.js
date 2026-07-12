@@ -3,6 +3,11 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { CircularGalleryApp } from './circular-gallery.js';
+import { inject } from '@vercel/analytics';
+
+// Initialize Vercel Analytics
+inject();
+
 
 // Force scroll to top on reload/load to avoid opening on last/cached scroll position
 if (history.scrollRestoration) {
