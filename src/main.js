@@ -4,8 +4,13 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { CircularGalleryApp } from './circular-gallery.js';
 
-gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+// Force scroll to top on reload/load to avoid opening on last/cached scroll position
+if (history.scrollRestoration) {
+  history.scrollRestoration = 'manual';
+}
+window.scrollTo(0, 0);
 
+gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -354,14 +359,43 @@ document.addEventListener('DOMContentLoaded', () => {
     const galleryWrap = document.getElementById('circularGalleryWrap');
     const galleryContainer = document.getElementById('circularGalleryContainer');
     let galleryApp = null;
+    let sliderContainer = null;
+    const isMobileProfile = window.innerWidth < 991;
 
     if (galleryWrap) {
-      galleryApp = new CircularGalleryApp(galleryWrap, {
-        items: galleryItems,
-        bend: 2.4, // C-Shape vertical curve multiplier
-        borderRadius: 0.05,
-        isScrollControlled: true
-      });
+      if (isMobileProfile) {
+        galleryWrap.innerHTML = '';
+        sliderContainer = document.createElement('div');
+        sliderContainer.classList.add('mobile-horizontal-gallery');
+
+        galleryItems.forEach(item => {
+          const itemEl = document.createElement('div');
+          itemEl.classList.add('mobile-gallery-item');
+
+          const img = document.createElement('img');
+          img.src = item.image;
+          img.classList.add('mobile-gallery-img');
+          img.alt = `Gallery image ${item.text}`;
+          img.loading = 'lazy';
+
+          const caption = document.createElement('span');
+          caption.classList.add('mobile-gallery-text');
+          caption.textContent = item.text;
+
+          itemEl.appendChild(img);
+          itemEl.appendChild(caption);
+          sliderContainer.appendChild(itemEl);
+        });
+
+        galleryWrap.appendChild(sliderContainer);
+      } else {
+        galleryApp = new CircularGalleryApp(galleryWrap, {
+          items: galleryItems,
+          bend: 2.4, // C-Shape vertical curve multiplier
+          borderRadius: 0.05,
+          isScrollControlled: true
+        });
+      }
     }
 
     // 3. ScrollTrigger Entrance Animation for left text columns
@@ -385,51 +419,75 @@ document.addEventListener('DOMContentLoaded', () => {
     );
 
     // 4. Pin Profile Section & Swap Heart for Circular Gallery on Scroll/Swipe
-    const profileTimeline = gsap.timeline({
-      scrollTrigger: {
-        trigger: profileSection,
-        start: 'top top',
-        end: '+=8000', // Scroll amount pinned (increased to allow a long scroll showing all images)
-        scrub: true,
-        pin: true,
-        anticipatePin: 1
-      }
-    });
-
-    // Step A: Scroll down indicator fades out quickly as user scrolls a little bit
-    profileTimeline.to(profileWrap, {
-      autoAlpha: 0,
-      scale: 0.8,
-      y: -60,
-      duration: 0.05,
-      ease: 'power1.inOut'
-    });
-
-    // Step B: Circular Gallery slides up and fades in quickly to be available
-    profileTimeline.to(galleryContainer, {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      duration: 0.15,
-      ease: 'power2.out',
-      onStart: () => {
+    if (isMobileProfile) {
+      // Mobile/Tablet: Make gallery immediately visible — no opacity fade-in needed
+      if (galleryContainer) {
+        gsap.set(galleryContainer, { opacity: 1, y: 0, scale: 1 });
         galleryContainer.classList.add('active');
-        if (galleryApp) {
-          galleryApp.onResize();
-        }
-      },
-      onReverseComplete: () => {
-        galleryContainer.classList.remove('active');
       }
-    }, 0.02);
 
-    // Step C: Scrub the OGL circular gallery rotation throughout the rest of the scroll (long lasting)
-    if (galleryApp) {
-      profileTimeline.to(galleryApp.scroll, {
-        target: 80.0, // Rotates the C-shape wheel more to display all images
-        duration: 0.95,
-        ease: 'none'
-      }, 0.05);
+      // Slide the gallery horizontally as the user scrolls vertically down the page
+      if (sliderContainer) {
+        ScrollTrigger.create({
+          trigger: profileSection,
+          start: 'top 60%',
+          end: 'bottom 100%',
+          scrub: 1.0,
+          animation: gsap.to(sliderContainer, {
+            x: () => -(sliderContainer.scrollWidth - window.innerWidth + 48),
+            ease: 'none'
+          }),
+          invalidateOnRefresh: true
+        });
+      }
+    } else {
+      // Desktop: Pin layout and transition card into gallery
+      const profileTimeline = gsap.timeline({
+        scrollTrigger: {
+          trigger: profileSection,
+          start: 'top top',
+          end: '+=8000', // Scroll amount pinned
+          scrub: true,
+          pin: true,
+          anticipatePin: 1
+        }
+      });
+
+      // Step A: Scroll down indicator fades out quickly as user scrolls a little bit
+      profileTimeline.to(profileWrap, {
+        autoAlpha: 0,
+        scale: 0.8,
+        y: -60,
+        duration: 0.05,
+        ease: 'power1.inOut'
+      });
+
+      // Step B: Circular Gallery slides up and fades in quickly to be available
+      profileTimeline.to(galleryContainer, {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.15,
+        ease: 'power2.out',
+        onStart: () => {
+          galleryContainer.classList.add('active');
+          if (galleryApp) {
+            galleryApp.onResize();
+          }
+        },
+        onReverseComplete: () => {
+          galleryContainer.classList.remove('active');
+        }
+      }, 0.02);
+
+      // Step C: Scrub the OGL circular gallery rotation throughout the rest of the scroll (long lasting)
+      if (galleryApp) {
+        profileTimeline.to(galleryApp.scroll, {
+          target: 80.0, // Rotates the C-shape wheel more to display all images
+          duration: 0.95,
+          ease: 'none'
+        }, 0.05);
+      }
     }
   }
 
@@ -445,6 +503,57 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     window.addEventListener('scroll', handleScroll);
     handleScroll(); // Initialize on page load
+  }
+
+  // --- 4.5. MOBILE MENU OVERLAY AND INTERACTION ---
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+  const mobileLinks = document.querySelectorAll('.mobile-nav-link');
+
+  if (hamburgerBtn && mobileMenuOverlay && header) {
+    let isMenuOpen = false;
+
+    const toggleMenu = () => {
+      isMenuOpen = !isMenuOpen;
+      hamburgerBtn.classList.toggle('open', isMenuOpen);
+      mobileMenuOverlay.classList.toggle('open', isMenuOpen);
+      header.classList.toggle('mobile-menu-open', isMenuOpen);
+
+      if (isMenuOpen) {
+        document.body.style.overflow = 'hidden';
+        gsap.fromTo('.mobile-nav-item',
+          { opacity: 0, y: 25 },
+          { opacity: 1, y: 0, duration: 0.5, stagger: 0.08, ease: 'power3.out', delay: 0.15, overwrite: 'auto' }
+        );
+      } else {
+        document.body.style.overflow = '';
+      }
+    };
+
+    hamburgerBtn.addEventListener('click', toggleMenu);
+
+    mobileLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        if (isMenuOpen) {
+          toggleMenu();
+        }
+
+        const targetId = link.getAttribute('href');
+        const targetSection = document.querySelector(targetId);
+        if (targetSection) {
+          // Add a tiny delay so the menu transition finishes smoothly
+          setTimeout(() => {
+            gsap.to(window, {
+              scrollTo: targetSection,
+              duration: 1.0,
+              ease: 'power3.inOut'
+            });
+          }, 150);
+        }
+      });
+    });
   }
 
   // --- 5. GOOEY NAV EFFECT ---
@@ -765,41 +874,54 @@ document.addEventListener('DOMContentLoaded', () => {
     const servicesPinGuide = document.querySelector('.services-pin-guide');
 
     if (servicesSection && serviceItems.length > 0) {
-      // Create ScrollTrigger to pin the section and scrub active focus items
-      ScrollTrigger.create({
-        trigger: servicesSection,
-        start: 'top top',
-        end: '+=3600', // Scroll distance pinned
-        scrub: true,
-        pin: true,
-        anticipatePin: 1,
-        onUpdate: (self) => {
-          const itemCount = serviceItems.length;
-          const progress = self.progress;
-
-          // Determine active item index based on scroll progress division
-          let activeIndex = Math.floor(progress * itemCount);
-          if (activeIndex >= itemCount) activeIndex = itemCount - 1;
-          if (activeIndex < 0) activeIndex = 0;
-
-          serviceItems.forEach((item, idx) => {
-            if (idx === activeIndex) {
-              item.classList.add('active');
-            } else {
-              item.classList.remove('active');
-            }
+      if (window.innerWidth < 991) {
+        // Mobile & Tablet: Scroll naturally. Highlight items as they cross the center of screen.
+        serviceItems.forEach((item) => {
+          ScrollTrigger.create({
+            trigger: item,
+            start: 'top 65%',
+            end: 'bottom 35%',
+            toggleClass: 'active',
+            invalidateOnRefresh: true
           });
+        });
+      } else {
+        // Desktop: Pin and scrub active focus items
+        ScrollTrigger.create({
+          trigger: servicesSection,
+          start: 'top top',
+          end: '+=3600', // Scroll distance pinned
+          scrub: true,
+          pin: true,
+          anticipatePin: 1,
+          onUpdate: (self) => {
+            const itemCount = serviceItems.length;
+            const progress = self.progress;
 
-          // Fade out left-column guide when user has scrolled past 70% of pinned range
-          if (servicesPinGuide) {
-            if (progress > 0.7) {
-              servicesPinGuide.classList.add('hidden');
-            } else {
-              servicesPinGuide.classList.remove('hidden');
+            // Determine active item index based on scroll progress division
+            let activeIndex = Math.floor(progress * itemCount);
+            if (activeIndex >= itemCount) activeIndex = itemCount - 1;
+            if (activeIndex < 0) activeIndex = 0;
+
+            serviceItems.forEach((item, idx) => {
+              if (idx === activeIndex) {
+                item.classList.add('active');
+              } else {
+                item.classList.remove('active');
+              }
+            });
+
+            // Fade out left-column guide when user has scrolled past 70% of pinned range
+            if (servicesPinGuide) {
+              if (progress > 0.7) {
+                servicesPinGuide.classList.add('hidden');
+              } else {
+                servicesPinGuide.classList.remove('hidden');
+              }
             }
           }
-        }
-      });
+        });
+      }
     }
   };
 

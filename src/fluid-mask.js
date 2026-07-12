@@ -129,6 +129,7 @@ const maskFragmentShader = `
   uniform float uBaseImageAspect;
   uniform float uRevealImageAspect;
   uniform float uPlaneAspect;
+  uniform float uRotate;
 
   varying vec2 vUv;
 
@@ -151,14 +152,23 @@ const maskFragmentShader = `
     // Read the fluid simulation density (Dye)
     float dye = texture2D(uDye, vUv).r;
 
-    // Map base UV
-    vec2 baseUv = coverUv(vUv, uBaseImageAspect, uPlaneAspect);
-    baseUv = clamp(baseUv, 0.001, 0.999);
-    vec4 baseColor = texture2D(uBaseTexture, baseUv);
+    vec2 baseUv;
+    vec2 revealUv;
 
-    // Map reveal UV
-    vec2 revealUv = coverUv(vUv, uRevealImageAspect, uPlaneAspect);
+    if (uRotate > 0.5) {
+      // Rotate UV 90 degrees clockwise for mobile viewports
+      vec2 rotUv = vec2(vUv.y, 1.0 - vUv.x);
+      baseUv = coverUv(rotUv, 1.0 / uBaseImageAspect, 1.0 / uPlaneAspect);
+      revealUv = coverUv(rotUv, 1.0 / uRevealImageAspect, 1.0 / uPlaneAspect);
+    } else {
+      baseUv = coverUv(vUv, uBaseImageAspect, uPlaneAspect);
+      revealUv = coverUv(vUv, uRevealImageAspect, uPlaneAspect);
+    }
+
+    baseUv = clamp(baseUv, 0.001, 0.999);
     revealUv = clamp(revealUv, 0.001, 0.999);
+
+    vec4 baseColor = texture2D(uBaseTexture, baseUv);
     vec4 revealColor = texture2D(uRevealTexture, revealUv);
 
     // Compute the smooth blend boundary based on dye density
@@ -439,7 +449,8 @@ export class FluidMaskReveal {
         uEdgeWidth: { value: this.settings.edgeWidth },
         uBaseImageAspect: { value: this.baseAspect },
         uRevealImageAspect: { value: this.revealAspect },
-        uPlaneAspect: { value: 1.0 }
+        uPlaneAspect: { value: 1.0 },
+        uRotate: { value: window.innerWidth < 768 ? 1.0 : 0.0 }
       }
     });
   }
@@ -500,6 +511,7 @@ export class FluidMaskReveal {
     
     if (this.maskMaterial) {
       this.maskMaterial.uniforms.uPlaneAspect.value = aspect;
+      this.maskMaterial.uniforms.uRotate.value = window.innerWidth < 768 ? 1.0 : 0.0;
     }
   }
 

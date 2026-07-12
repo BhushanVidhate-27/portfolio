@@ -124,6 +124,35 @@ const WorksStack = () => {
 
     const cards = gsap.utils.toArray('.work-card-anim');
     const total = cards.length;
+    const isMobile = window.innerWidth < 768;
+
+    let tl = null;
+
+    if (isMobile) {
+      // Mobile: slide/fade up cards as they scroll into view
+      cards.forEach((card) => {
+        gsap.set(card, { opacity: 0, y: 40 });
+        ScrollTrigger.create({
+          trigger: card,
+          start: 'top 85%',
+          onEnter: () => {
+            gsap.to(card, {
+              opacity: 1,
+              y: 0,
+              duration: 0.6,
+              ease: 'power2.out',
+              overwrite: 'auto'
+            });
+          }
+        });
+      });
+
+      return () => {
+        ScrollTrigger.getAll().forEach(st => {
+          if (cards.includes(st.trigger)) st.kill();
+        });
+      };
+    }
 
     // ── Initial state: all cards hidden below viewport centre ──
     gsap.set(cards, {
@@ -142,7 +171,7 @@ const WorksStack = () => {
     const INTRO_DUR   = 1.0;
     const INTRO_PAUSE = 0.5;
 
-    const tl = gsap.timeline({
+    tl = gsap.timeline({
       scrollTrigger: {
         trigger: '#works',
         start: 'top top',
@@ -208,7 +237,7 @@ const WorksStack = () => {
       ScrollTrigger.getAll().forEach(st => {
         if (st.vars && st.vars.trigger === '#works') st.kill();
       });
-      tl.kill();
+      if (tl) tl.kill();
     };
   }, []);
 

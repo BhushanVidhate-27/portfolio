@@ -30,11 +30,8 @@
 }
 
 /* Adjust layout on mobile devices */
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 768px) {
   .lanyard-fixed-container {
-    width: 260px;
-    height: 100vh;
-    top: 0;
-    left: 0;
+    display: none !important;
   }
 }

@@ -1,0 +1,9 @@
+{
+  "projectId": "130b7971-a2d0-4703-b29b-cf5a52e03809",
+  "type": "frontend",
+  "name": "Verify Portfolio Home and Navigation",
+  "planSteps": [
+    { "type": "action", "description": "Navigate to /" },
+    { "type": "assertion", "description": "The page header logo containing the text 'BHUSHAN' is visible" }
+  ]
+}
